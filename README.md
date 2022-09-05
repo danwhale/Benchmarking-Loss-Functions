@@ -7,6 +7,8 @@ We tested a number of local structure preserving loss functions and their influe
 examples are in NodeClassificaton.jpynb 
 
 ## Available loss functions
+In some loss functions we added negative sampling optimization (VERSE, LINE, DeepWalk, Node2Vec)
+
 * Laplacian Eigenmaps (https://proceedings.neurips.cc/paper/2001/file/f106b7f99d2cb30c3db1c3cc0fde9ccb-Paper.pdf)
 * Graph Factorization (https://dl.acm.org/doi/pdf/10.1145/2488388.2488393)
 * HOPE (https://dl.acm.org/doi/pdf/10.1145/2939672.2939751)
