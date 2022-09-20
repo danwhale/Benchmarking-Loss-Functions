@@ -116,18 +116,18 @@ class SamplerRandomWalk(SamplerWithNegSamples):
 
     def pos_sample(self, batch):
         name_of_samples = (
-            self.datasetname
-            + "_"
-            + str(self.walk_length)
-            + "_"
-            + str(self.walks_per_node)
-            + "_"
-            + str(self.context_size)
-            + "_"
-            + str(self.p)
-            + "_"
-            + str(self.q)
-            + ".pickle"
+                self.datasetname
+                + "_"
+                + str(self.walk_length)
+                + "_"
+                + str(self.walks_per_node)
+                + "_"
+                + str(self.context_size)
+                + "_"
+                + str(self.p)
+                + "_"
+                + str(self.q)
+                + ".pickle"
         )
         if os.path.exists(name_of_samples):
             with open(name_of_samples, "rb") as f:
@@ -153,7 +153,7 @@ class SamplerRandomWalk(SamplerWithNegSamples):
             num_walks_per_rw = 1 + self.walk_length + 1 - self.context_size
             for j in range(num_walks_per_rw):
                 walks.append(
-                    rw[:, j : j + self.context_size]
+                    rw[:, j: j + self.context_size]
                 )  # теперь у нас внутри walks лежат 12 матриц размерам 10*1
             pos_samples = torch.cat(walks, dim=0)  # .to(self.device)
         # with open(name_of_samples,'wb') as f:
@@ -288,7 +288,7 @@ class SamplerContextMatrix(SamplerWithNegSamples):
     def find_sim_rank_for_batch_torch(self, batch, Adj, device, mask, mask_new, r):
         t = 10
         c = torch.sqrt(torch.tensor(0.6))
-        ## approx with SARW
+        # approx with SARW
         batch = batch.to(device)
         Adj = Adj.to(device)
         SimRank = torch.zeros(len(batch), len(batch)).to(device)  # O(n^2)
@@ -313,7 +313,7 @@ class SamplerContextMatrix(SamplerWithNegSamples):
                 a2 = pi_u != -1  # O(r*t)
                 a3 = pi_v != -1  # O(r*t)
                 a_to_compare = a1 * a2 * a3  # O(r*t)
-                SR = len(torch.unique((a_to_compare).nonzero(as_tuple=True)[0]))  # O()
+                SR = len(torch.unique(a_to_compare.nonzero(as_tuple=True)[0]))  # O()
                 SimRank[u][nei] = SR / r  #
 
         return SimRank
@@ -386,7 +386,7 @@ class SamplerAPP(SamplerWithNegSamples):
     def sample(self, batch, **kwargs):
         if not isinstance(batch, torch.Tensor):
             batch = torch.tensor(batch, dtype=torch.long).to(self.device)
-        return (self.pos_sample(batch), self.neg_sample(batch))
+        return self.pos_sample(batch), self.neg_sample(batch)
 
     def pos_sample(self, batch, **kwargs):
 
@@ -427,7 +427,7 @@ class SamplerAPP(SamplerWithNegSamples):
 
     def find_PPR_approx(self, batch, Adj, device, r, alpha, row):
         N = math.ceil(math.log(1 / (r * alpha), (1 - alpha)))
-        length = list(map(lambda x: int((1 - alpha) ** x * alpha * (r)), list(range(N - 1))))
+        length = list(map(lambda x: int((1 - alpha) ** x * alpha * r), list(range(N - 1))))
         r = sum(length)
         dict_data = dict()
         # device = 'cpu'
